@@ -1,16 +1,15 @@
-import { iteratorSymbol } from 'immer/dist/internal'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { addItem } from '../features/customerSlice'
+import { addFoodToCustomer } from '../features/customerSlice'
 
-interface CustomerCardTypes {
+interface CustomerCardType {
     name: string
-    items: string[]
+    id: string
+    food: string[]
 }
 
-export default function CustomerCard({ name, items }: CustomerCardTypes) {
-  const [itemsInput, setItemsInput] = useState('')
-  const [foodItems, setFoodItems] = useState(items)
+export default function CustomerCard({ name, id, food }: CustomerCardType) {
+  const [foodInput, setFoodInput] = useState('')
 
   const dispatch = useDispatch()
 
@@ -18,10 +17,18 @@ export default function CustomerCard({ name, items }: CustomerCardTypes) {
     <div className="customer-food-card-container">
         <p>{name}</p>
         <div className="customer-foods-container">
-            {foodItems.map(item => <div key={item} className="customer-food">{item}</div>)}
+          <div className="customer-food">
+            {food.map(item => <p key={item}>{item}</p>)}
+          </div>
             <div className="customer-food-input-container">
-            <input onChange={e => setItemsInput(e.target.value)} />
-            <button onClick={() => dispatch(addItem(itemsInput))}>Add</button>
+            <input onChange={e => setFoodInput(e.target.value)} value={foodInput} />
+            <button onClick={() => {
+              if(foodInput){
+                dispatch(addFoodToCustomer({id: id, food: foodInput}))
+                setFoodInput('')
+              }
+            }
+            }>Add</button>
             </div>
         </div>
     </div>

@@ -1,30 +1,41 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 interface CustomerState {
-    value: {
-        name: string
-        items: string[]
-    }[]
+    value: Customer[]
+}
+
+interface addFoodToCustomerPayload {
+    id: string
+    food: string
+}
+
+interface Customer {
+    id: string
+    name: string
+    food: string[]
 }
 
 const initialState: CustomerState = {
-    value: [{name: "Greg Schoenberg", items: ["turkey", "rutebaga"]}]
+    value: []
 }
 
 export const customerSlice = createSlice({
-    name: "reservations",
+    name: "customers",
     initialState,
     reducers: {
-        addCustomer: (state, action: PayloadAction<{ name: string; items: string[]; }>) => {
+        addCustomer: (state, action: PayloadAction<Customer>) => {
             state.value.push(action.payload)
         },
-        addItem: (state, action: PayloadAction<string>) => {
-            console.log(state.value[0])
-            // state.value.items.push(action.payload)
+        addFoodToCustomer: (state, action: PayloadAction<addFoodToCustomerPayload>) => {
+            state.value.forEach(customer => {
+                if(customer.id === action.payload.id){
+                    customer.food.push(action.payload.food)
+                }
+            })
         }
     }
 })
 
-export const { addCustomer, addItem } = customerSlice.actions
+export const { addCustomer, addFoodToCustomer } = customerSlice.actions
 
 export default customerSlice.reducer
